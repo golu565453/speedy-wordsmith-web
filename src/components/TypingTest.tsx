@@ -15,6 +15,13 @@ const timerOptions: TimerOption[] = [
   { value: 300, label: "5 minutes" }
 ];
 
+const pageOptions = [
+  { value: 1, label: "1 page" },
+  { value: 2, label: "2 pages" },
+  { value: 3, label: "3 pages" },
+  { value: 5, label: "5 pages" }
+];
+
 const TypingTest: React.FC = () => {
   const [quote, setQuote] = useState<string>("");
   const [characters, setCharacters] = useState<CharacterState[]>([]);
@@ -22,6 +29,7 @@ const TypingTest: React.FC = () => {
   const [isTestActive, setIsTestActive] = useState<boolean>(false);
   const [isTestComplete, setIsTestComplete] = useState<boolean>(false);
   const [timerDuration, setTimerDuration] = useState<number>(60);
+  const [pageCount, setPageCount] = useState<number>(1);
   const [timeElapsed, setTimeElapsed] = useState<number>(0);
   const [correctChars, setCorrectChars] = useState<number>(0);
   const [incorrectChars, setIncorrectChars] = useState<number>(0);
@@ -43,7 +51,11 @@ const TypingTest: React.FC = () => {
 
   // Reset the test
   const resetTest = useCallback(() => {
-    const newQuote = getRandomQuote();
+    let newQuote = "";
+    for (let i = 0; i < pageCount; i++) {
+      if (i > 0) newQuote += " ";
+      newQuote += getRandomQuote();
+    }
     setQuote(newQuote);
     setCharacters(initializeCharacters(newQuote));
     setCurrentIndex(0);
@@ -57,7 +69,14 @@ const TypingTest: React.FC = () => {
       inputRef.current.value = "";
       inputRef.current.focus();
     }
-  }, [initializeCharacters]);
+  }, [initializeCharacters, pageCount]);
+
+  // Reset test when page count changes
+  useEffect(() => {
+    if (!isTestActive) {
+      resetTest();
+    }
+  }, [pageCount, resetTest, isTestActive]);
 
   // Handle key press
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -165,6 +184,11 @@ const TypingTest: React.FC = () => {
     resetTest();
   };
 
+  // Handle page count change
+  const handlePageChange = (value: string) => {
+    setPageCount(Number(value));
+  };
+
   // Render characters with styling
   const renderText = () => {
     return (
@@ -203,6 +227,23 @@ const TypingTest: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {timerOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value.toString()}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={pageCount.toString()}
+                onValueChange={handlePageChange}
+                disabled={isTestActive}
+              >
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Select pages" />
+                </SelectTrigger>
+                <SelectContent>
+                  {pageOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value.toString()}>
                       {option.label}
                     </SelectItem>
