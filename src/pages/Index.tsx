@@ -1,6 +1,9 @@
 
 import React, { useEffect } from "react";
 import TypingTest from "@/components/TypingTest";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { FileText } from "lucide-react";
 
 const Index = () => {
   // Focus on the page when it loads
@@ -11,7 +14,15 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col items-center pt-12 pb-16 px-4">
       <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold mb-2 text-primary">SpeedType</h1>
+        <div className="flex justify-center items-center gap-4 mb-4">
+          <h1 className="text-4xl font-bold text-primary">SpeedType</h1>
+          <Link to="/practice">
+            <Button variant="outline" size="sm">
+              <FileText className="h-4 w-4 mr-2" />
+              Practice Mode
+            </Button>
+          </Link>
+        </div>
         <p className="text-muted-foreground">
           Improve your typing speed and accuracy with this typing test
         </p>
