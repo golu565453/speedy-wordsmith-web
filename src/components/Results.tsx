@@ -3,9 +3,10 @@ import React from "react";
 import { TypingStats } from "@/types/typingTypes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatTime } from "@/utils/typingUtils";
 
 interface ResultsProps {
-  stats: TypingStats;
+  stats: TypingStats & { completionTime: number };
   onRestart: () => void;
 }
 
@@ -25,6 +26,11 @@ const Results: React.FC<ResultsProps> = ({ stats, onRestart }) => {
             <span className="text-3xl font-bold text-primary">{stats.accuracy}%</span>
             <span className="text-sm text-muted-foreground">Accuracy</span>
           </div>
+        </div>
+        
+        <div className="flex flex-col items-center p-4 bg-secondary rounded-lg">
+          <span className="text-2xl font-bold text-primary">{formatTime(stats.completionTime)}</span>
+          <span className="text-sm text-muted-foreground">Completion Time</span>
         </div>
         
         <div className="space-y-2">

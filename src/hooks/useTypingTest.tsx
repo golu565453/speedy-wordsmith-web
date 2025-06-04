@@ -37,6 +37,7 @@ export const useTypingTest = () => {
   const [timerDuration, setTimerDuration] = useState<number>(60);
   const [pageCount, setPageCount] = useState<number>(1);
   const [timeElapsed, setTimeElapsed] = useState<number>(0);
+  const [completionTime, setCompletionTime] = useState<number>(0);
   const [correctChars, setCorrectChars] = useState<number>(0);
   const [incorrectChars, setIncorrectChars] = useState<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,6 +74,7 @@ export const useTypingTest = () => {
     setIsTestActive(false);
     setIsTestComplete(false);
     setTimeElapsed(0);
+    setCompletionTime(0);
     setCorrectChars(0);
     setIncorrectChars(0);
     
@@ -165,6 +167,7 @@ export const useTypingTest = () => {
 
   // Handle timer completion
   const handleTimeUp = () => {
+    setCompletionTime(timeElapsed);
     finishTest();
   };
 
@@ -175,6 +178,9 @@ export const useTypingTest = () => {
 
   // Finish the test
   const finishTest = () => {
+    if (!isTestComplete) {
+      setCompletionTime(timeElapsed);
+    }
     setIsTestActive(false);
     setIsTestComplete(true);
     if (inputRef.current) {
@@ -183,14 +189,15 @@ export const useTypingTest = () => {
   };
 
   // Calculate typing statistics
-  const getTypingStats = (): TypingStats => {
+  const getTypingStats = (): TypingStats & { completionTime: number } => {
     const totalChars = correctChars + incorrectChars;
     return {
-      wpm: calculateWPM(correctChars, timeElapsed),
+      wpm: calculateWPM(correctChars, completionTime || timeElapsed),
       accuracy: calculateAccuracy(correctChars, totalChars),
       correctChars,
       incorrectChars,
-      totalChars
+      totalChars,
+      completionTime: completionTime || timeElapsed
     };
   };
 
