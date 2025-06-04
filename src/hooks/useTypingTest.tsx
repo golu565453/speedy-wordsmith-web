@@ -1,7 +1,32 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CharacterState, TypingStats } from "@/types/typingTypes";
 import { calculateWPM, calculateAccuracy, getRandomQuote } from "@/utils/typingUtils";
+
+// Function to generate text with specific number of lines
+const generateTextWithLines = (lines: number): string => {
+  const words = [
+    "the", "quick", "brown", "fox", "jumps", "over", "lazy", "dog", "pack", "my", "box", "with",
+    "five", "dozen", "liquor", "jugs", "amazingly", "few", "discotheques", "provide", "jukeboxes",
+    "sphinx", "of", "black", "quartz", "judge", "vow", "waltz", "bad", "nymph", "for", "luck",
+    "fjord", "type", "test", "practice", "speed", "accuracy", "keyboard", "typing", "skills",
+    "improve", "learn", "fast", "words", "per", "minute", "character", "correct", "mistake",
+    "focus", "concentrate", "rhythm", "flow", "smooth", "consistent", "regular", "daily"
+  ];
+  
+  let result = "";
+  const wordsPerLine = 12; // Approximately 12 words per line
+  
+  for (let line = 0; line < lines; line++) {
+    if (line > 0) result += " ";
+    
+    for (let word = 0; word < wordsPerLine; word++) {
+      if (word > 0) result += " ";
+      result += words[Math.floor(Math.random() * words.length)];
+    }
+  }
+  
+  return result;
+};
 
 export const useTypingTest = () => {
   const [quote, setQuote] = useState<string>("");
@@ -28,10 +53,20 @@ export const useTypingTest = () => {
   // Reset the test
   const resetTest = useCallback(() => {
     let newQuote = "";
-    for (let i = 0; i < pageCount; i++) {
-      if (i > 0) newQuote += " ";
-      newQuote += getRandomQuote();
-    }
+    
+    // Generate text based on page count with specific line count
+    const pageOptions = [
+      { value: 1, lines: 25 },
+      { value: 2, lines: 50 },
+      { value: 3, lines: 75 },
+      { value: 5, lines: 125 }
+    ];
+    
+    const selectedPage = pageOptions.find(p => p.value === pageCount);
+    const lines = selectedPage ? selectedPage.lines : 25;
+    
+    newQuote = generateTextWithLines(lines);
+    
     setQuote(newQuote);
     setCharacters(initializeCharacters(newQuote));
     setCurrentIndex(0);

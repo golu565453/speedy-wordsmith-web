@@ -13,10 +13,10 @@ const timerOptions: TimerOption[] = [
 ];
 
 const pageOptions = [
-  { value: 1, label: "1 page" },
-  { value: 2, label: "2 pages" },
-  { value: 3, label: "3 pages" },
-  { value: 5, label: "5 pages" }
+  { value: 1, label: "1 page", lines: 25 },
+  { value: 2, label: "2 pages", lines: 50 },
+  { value: 3, label: "3 pages", lines: 75 },
+  { value: 5, label: "5 pages", lines: 125 }
 ];
 
 interface TypingTestControlsProps {
