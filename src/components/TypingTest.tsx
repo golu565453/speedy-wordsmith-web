@@ -1,7 +1,6 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTypingTest } from "@/hooks/useTypingTest";
-import Timer from "./Timer";
 import Results from "./Results";
 import TypingTestControls from "./TypingTestControls";
 import TypingTestDisplay from "./TypingTestDisplay";
@@ -11,36 +10,35 @@ const TypingTest: React.FC = () => {
     characters,
     isTestActive,
     isTestComplete,
-    timerDuration,
     pageCount,
     inputRef,
     resetTest,
     handleKeyDown,
-    handleTimeUp,
-    handleTimerTick,
     getTypingStats,
-    handleTimerChange,
     handlePageChange
   } = useTypingTest();
 
+  // Add ESC key functionality
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        resetTest();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [resetTest]);
+
   return (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full max-w-4xl mx-auto px-4">
       {!isTestComplete ? (
         <>
           <TypingTestControls
-            timerDuration={timerDuration}
             pageCount={pageCount}
             isTestActive={isTestActive}
-            onTimerChange={handleTimerChange}
             onPageChange={handlePageChange}
             onReset={resetTest}
-          />
-          
-          <Timer
-            duration={timerDuration}
-            isActive={isTestActive}
-            onTimeUp={handleTimeUp}
-            onTick={handleTimerTick}
           />
           
           <TypingTestDisplay
