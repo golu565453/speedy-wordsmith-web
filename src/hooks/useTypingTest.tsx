@@ -1,30 +1,44 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CharacterState, TypingStats } from "@/types/typingTypes";
 import { calculateWPM, calculateAccuracy } from "@/utils/typingUtils";
 
-// Function to generate easier text for typing practice
-const generateEasyText = (lines: number): string => {
+// Function to generate text based on difficulty
+const generateTextByDifficulty = (lines: number, difficulty: string): string => {
   const easyWords = [
     "the", "and", "for", "are", "but", "not", "you", "all", "can", "had", "her", "was", "one",
     "our", "out", "day", "get", "has", "him", "his", "how", "man", "new", "now", "old", "see",
     "two", "way", "who", "boy", "did", "its", "let", "put", "say", "she", "too", "use", "big",
-    "end", "far", "may", "off", "own", "run", "sit", "try", "car", "cut", "dog", "eat", "eye",
-    "fly", "fun", "got", "hit", "job", "low", "red", "sun", "top", "win", "yes", "bad", "bed",
-    "box", "cat", "cow", "cup", "do", "go", "had", "hot", "key", "let", "mom", "pop", "run",
-    "six", "ten", "up", "we", "am", "at", "be", "by", "he", "if", "in", "is", "it", "my", "no",
-    "of", "on", "or", "so", "to", "as", "be", "do", "go", "he", "hi", "me", "no", "up", "we"
+    "end", "far", "may", "off", "own", "run", "sit", "try", "car", "cut", "dog", "eat", "eye"
   ];
   
+  const mediumWords = [
+    "about", "after", "again", "against", "before", "being", "between", "could", "during", "every",
+    "found", "great", "group", "important", "large", "never", "number", "other", "place", "point",
+    "right", "small", "sound", "still", "system", "three", "through", "together", "under", "water",
+    "where", "while", "without", "world", "would", "write", "young", "example", "general", "government"
+  ];
+  
+  const hardWords = [
+    "absolutely", "acceptance", "accomplish", "architecture", "beautiful", "characteristics", "communicate",
+    "complicated", "concentration", "consideration", "development", "environment", "immediately", "independent",
+    "information", "intelligence", "international", "investigation", "organization", "performance", "possibility",
+    "professional", "recommendation", "responsibility", "sophisticated", "understanding", "unfortunately",
+    "comprehensive", "extraordinary", "implementation", "representation", "transformation", "administration"
+  ];
+  
+  let wordList = easyWords;
+  if (difficulty === "medium") wordList = mediumWords;
+  if (difficulty === "hard") wordList = hardWords;
+  
   let result = "";
-  const wordsPerLine = 12;
+  const wordsPerLine = difficulty === "hard" ? 8 : difficulty === "medium" ? 10 : 12;
   
   for (let line = 0; line < lines; line++) {
     if (line > 0) result += " ";
     
     for (let word = 0; word < wordsPerLine; word++) {
       if (word > 0) result += " ";
-      result += easyWords[Math.floor(Math.random() * easyWords.length)];
+      result += wordList[Math.floor(Math.random() * wordList.length)];
     }
   }
   
@@ -38,6 +52,7 @@ export const useTypingTest = () => {
   const [isTestActive, setIsTestActive] = useState<boolean>(false);
   const [isTestComplete, setIsTestComplete] = useState<boolean>(false);
   const [pageCount, setPageCount] = useState<number>(1);
+  const [difficulty, setDifficulty] = useState<string>("easy");
   const [timeElapsed, setTimeElapsed] = useState<number>(0);
   const [completionTime, setCompletionTime] = useState<number>(0);
   const [correctChars, setCorrectChars] = useState<number>(0);
@@ -66,7 +81,7 @@ export const useTypingTest = () => {
     const selectedPage = pageOptions.find(p => p.value === pageCount);
     const lines = selectedPage ? selectedPage.lines : 25;
     
-    const newQuote = generateEasyText(lines);
+    const newQuote = generateTextByDifficulty(lines, difficulty);
     
     setQuote(newQuote);
     setCharacters(initializeCharacters(newQuote));
@@ -83,19 +98,19 @@ export const useTypingTest = () => {
       inputRef.current.value = "";
       inputRef.current.focus();
     }
-  }, [initializeCharacters, pageCount]);
+  }, [initializeCharacters, pageCount, difficulty]);
 
   // Initialize with easy text
   useEffect(() => {
     resetTest();
   }, []);
 
-  // Reset test when page count changes
+  // Reset test when page count or difficulty changes
   useEffect(() => {
     if (!isTestActive) {
       resetTest();
     }
-  }, [pageCount, resetTest, isTestActive]);
+  }, [pageCount, difficulty, resetTest, isTestActive]);
 
   // Timer for tracking elapsed time
   useEffect(() => {
@@ -206,6 +221,11 @@ export const useTypingTest = () => {
     setPageCount(Number(value));
   };
 
+  // Handle difficulty change
+  const handleDifficultyChange = (value: string) => {
+    setDifficulty(value);
+  };
+
   return {
     quote,
     characters,
@@ -213,6 +233,7 @@ export const useTypingTest = () => {
     isTestActive,
     isTestComplete,
     pageCount,
+    difficulty,
     timeElapsed,
     correctChars,
     incorrectChars,
@@ -220,6 +241,7 @@ export const useTypingTest = () => {
     resetTest,
     handleKeyDown,
     getTypingStats,
-    handlePageChange
+    handlePageChange,
+    handleDifficultyChange
   };
 };

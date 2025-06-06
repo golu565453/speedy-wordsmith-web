@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import TypingTest from "@/components/TypingTest";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { FileText } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
 
 const Index = () => {
   // Focus on the page when it loads
@@ -38,7 +38,18 @@ const Index = () => {
           Press <kbd className="px-2 py-1 bg-secondary rounded text-xs">ESC</kbd> to restart the test.
         </p>
         <div className="mt-4 pt-4 border-t border-border">
-          <p className="text-primary font-medium">Made by Golu Prajapati</p>
+          <p className="text-primary font-medium">
+            Made by{" "}
+            <a 
+              href="https://golu-portfolio.vercel.app" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline inline-flex items-center gap-1"
+            >
+              Golu Prajapati
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </p>
         </div>
       </footer>
     </div>

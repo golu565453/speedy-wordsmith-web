@@ -11,23 +11,50 @@ const pageOptions = [
   { value: 5, label: "5 pages", lines: 125 }
 ];
 
+const difficultyOptions = [
+  { value: "easy", label: "Easy" },
+  { value: "medium", label: "Medium" },
+  { value: "hard", label: "Hard" }
+];
+
 interface TypingTestControlsProps {
   pageCount: number;
+  difficulty: string;
   isTestActive: boolean;
   onPageChange: (value: string) => void;
+  onDifficultyChange: (value: string) => void;
   onReset: () => void;
 }
 
 const TypingTestControls: React.FC<TypingTestControlsProps> = ({
   pageCount,
+  difficulty,
   isTestActive,
   onPageChange,
+  onDifficultyChange,
   onReset
 }) => {
   return (
     <div className="flex justify-between items-center mb-6">
       <h2 className="text-2xl font-bold">Typing Test</h2>
       <div className="flex items-center space-x-2">
+        <Select
+          value={difficulty}
+          onValueChange={onDifficultyChange}
+          disabled={isTestActive}
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Difficulty" />
+          </SelectTrigger>
+          <SelectContent>
+            {difficultyOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
         <Select
           value={pageCount.toString()}
           onValueChange={onPageChange}

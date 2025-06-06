@@ -13,11 +13,14 @@ const TypingTest: React.FC = () => {
     isTestActive,
     isTestComplete,
     pageCount,
+    difficulty,
+    currentIndex,
     inputRef,
     resetTest,
     handleKeyDown,
     getTypingStats,
-    handlePageChange
+    handlePageChange,
+    handleDifficultyChange
   } = useTypingTest();
 
   const [showCurrentStats, setShowCurrentStats] = useState(false);
@@ -55,14 +58,17 @@ const TypingTest: React.FC = () => {
         <>
           <TypingTestControls
             pageCount={pageCount}
+            difficulty={difficulty}
             isTestActive={isTestActive}
             onPageChange={handlePageChange}
+            onDifficultyChange={handleDifficultyChange}
             onReset={resetTest}
           />
           
           <TypingTestDisplay
             characters={characters}
             isTestActive={isTestActive}
+            currentIndex={currentIndex}
           />
           
           {/* Submit button to check current speed */}
