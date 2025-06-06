@@ -2,7 +2,8 @@
 import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { Link } from "react-router-dom";
+import { FileText } from "lucide-react";
 
 const pageOptions = [
   { value: 1, label: "1 page", lines: 25 },
@@ -41,7 +42,6 @@ const TypingTestControls: React.FC<TypingTestControlsProps> = ({
         <Select
           value={difficulty}
           onValueChange={onDifficultyChange}
-          disabled={isTestActive}
         >
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Difficulty" />
@@ -58,7 +58,6 @@ const TypingTestControls: React.FC<TypingTestControlsProps> = ({
         <Select
           value={pageCount.toString()}
           onValueChange={onPageChange}
-          disabled={isTestActive}
         >
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Select pages" />
@@ -72,15 +71,12 @@ const TypingTestControls: React.FC<TypingTestControlsProps> = ({
           </SelectContent>
         </Select>
         
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onReset}
-          disabled={isTestActive}
-          title="New Quote"
-        >
-          <RefreshCw className="h-4 w-4" />
-        </Button>
+        <Link to="/practice">
+          <Button variant="outline" size="sm">
+            <FileText className="h-4 w-4 mr-2" />
+            Practice Mode
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CharacterState, TypingStats } from "@/types/typingTypes";
 import { calculateWPM, calculateAccuracy } from "@/utils/typingUtils";
@@ -108,10 +107,10 @@ export const useTypingTest = () => {
     resetTest();
   }, []);
 
-  // Reset test when page count or difficulty changes
+  // Only reset test when page count changes, not difficulty
   useEffect(() => {
     resetTest();
-  }, [pageCount, difficulty, resetTest]);
+  }, [pageCount, resetTest]);
 
   // Timer for tracking elapsed time
   useEffect(() => {
@@ -227,9 +226,35 @@ export const useTypingTest = () => {
     setPageCount(Number(value));
   };
 
-  // Handle difficulty change
+  // Handle difficulty change - only update state, don't reset
   const handleDifficultyChange = (value: string) => {
     setDifficulty(value);
+    // Generate new text with the new difficulty but keep current state
+    const pageOptions = [
+      { value: 1, lines: 25 },
+      { value: 2, lines: 50 },
+      { value: 3, lines: 75 },
+      { value: 5, lines: 125 }
+    ];
+    
+    const selectedPage = pageOptions.find(p => p.value === pageCount);
+    const lines = selectedPage ? selectedPage.lines : 25;
+    
+    const newQuote = generateTextByDifficulty(lines, value);
+    setQuote(newQuote);
+    setCharacters(initializeCharacters(newQuote));
+    setCurrentIndex(0);
+    setIsTestActive(false);
+    setTimeElapsed(0);
+    setCorrectChars(0);
+    setIncorrectChars(0);
+    setStartTime(0);
+    setAllCharactersTyped(false);
+    
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.focus();
+    }
   };
 
   return {
