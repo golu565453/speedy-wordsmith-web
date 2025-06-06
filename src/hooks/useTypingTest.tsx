@@ -178,16 +178,30 @@ export const useTypingTest = () => {
       setIncorrectChars(prev => prev + 1);
     }
     
-    // Move to next character if available
-    if (currentIndex < characters.length - 1) {
-      updatedCharacters[currentIndex + 1].isCurrent = true;
-      setCharacters(updatedCharacters);
-      setCurrentIndex(currentIndex + 1);
-    } else {
+    // Check if we're at the last character
+    if (currentIndex >= characters.length - 1) {
       // End of text reached
       setCharacters(updatedCharacters);
       finishTest();
+      return;
     }
+
+    // Check if current character is space and we just completed the last word
+    if (e.key === ' ' || e.key === 'Enter') {
+      // Find remaining text to check if this is the last word
+      const remainingText = characters.slice(currentIndex + 1).map(c => c.char).join('').trim();
+      if (remainingText === '' || remainingText.length === 0) {
+        // This was the last word, finish the test
+        setCharacters(updatedCharacters);
+        finishTest();
+        return;
+      }
+    }
+    
+    // Move to next character
+    updatedCharacters[currentIndex + 1].isCurrent = true;
+    setCharacters(updatedCharacters);
+    setCurrentIndex(currentIndex + 1);
   };
 
   // Finish the test

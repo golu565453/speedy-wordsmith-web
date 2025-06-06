@@ -41,7 +41,7 @@ const Index = () => {
           <p className="text-primary font-medium">
             Made by{" "}
             <a 
-              href="https://golu-portfolio.vercel.app" 
+              href="https://goluprajapati.vercel.app/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 underline inline-flex items-center gap-1"
