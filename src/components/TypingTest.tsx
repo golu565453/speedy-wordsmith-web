@@ -15,6 +15,7 @@ const TypingTest: React.FC = () => {
     pageCount,
     difficulty,
     currentIndex,
+    allCharactersTyped,
     inputRef,
     resetTest,
     handleKeyDown,
@@ -41,7 +42,7 @@ const TypingTest: React.FC = () => {
   }, [resetTest]);
 
   const handleSubmit = () => {
-    if (isTestActive) {
+    if (allCharactersTyped) {
       const stats = getTypingStats();
       setCurrentStats(stats);
       setShowCurrentStats(true);
@@ -73,8 +74,8 @@ const TypingTest: React.FC = () => {
             currentIndex={currentIndex}
           />
           
-          {/* Submit button to check current speed */}
-          {isTestActive && (
+          {/* Submit button to check current speed - only show when all characters are typed */}
+          {allCharactersTyped && (
             <div className="text-center mt-6">
               <Button 
                 onClick={handleSubmit}

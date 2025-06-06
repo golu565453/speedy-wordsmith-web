@@ -59,6 +59,7 @@ export const useTypingTest = () => {
   const [correctChars, setCorrectChars] = useState<number>(0);
   const [incorrectChars, setIncorrectChars] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);
+  const [allCharactersTyped, setAllCharactersTyped] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Create character state array from quote
@@ -94,6 +95,7 @@ export const useTypingTest = () => {
     setCorrectChars(0);
     setIncorrectChars(0);
     setStartTime(0);
+    setAllCharactersTyped(false);
     
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -108,10 +110,8 @@ export const useTypingTest = () => {
 
   // Reset test when page count or difficulty changes
   useEffect(() => {
-    if (!isTestActive) {
-      resetTest();
-    }
-  }, [pageCount, difficulty, resetTest, isTestActive]);
+    resetTest();
+  }, [pageCount, difficulty, resetTest]);
 
   // Timer for tracking elapsed time
   useEffect(() => {
@@ -157,6 +157,9 @@ export const useTypingTest = () => {
         setIncorrectChars(prev => prev - 1);
       }
       
+      // Reset allCharactersTyped if we're backspacing
+      setAllCharactersTyped(false);
+      
       return;
     }
 
@@ -179,10 +182,11 @@ export const useTypingTest = () => {
       setIncorrectChars(prev => prev + 1);
     }
     
-    // Check if we're at the last character - but don't auto-finish
+    // Check if we're at the last character
     if (currentIndex >= characters.length - 1) {
-      // Just update the characters, don't finish the test automatically
+      // All characters have been typed
       setCharacters(updatedCharacters);
+      setAllCharactersTyped(true);
       return;
     }
     
@@ -239,6 +243,7 @@ export const useTypingTest = () => {
     timeElapsed,
     correctChars,
     incorrectChars,
+    allCharactersTyped,
     inputRef,
     resetTest,
     handleKeyDown,
