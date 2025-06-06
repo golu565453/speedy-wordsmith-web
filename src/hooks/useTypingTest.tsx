@@ -1,3 +1,4 @@
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CharacterState, TypingStats } from "@/types/typingTypes";
 import { calculateWPM, calculateAccuracy } from "@/utils/typingUtils";
@@ -178,24 +179,11 @@ export const useTypingTest = () => {
       setIncorrectChars(prev => prev + 1);
     }
     
-    // Check if we're at the last character
+    // Check if we're at the last character - but don't auto-finish
     if (currentIndex >= characters.length - 1) {
-      // End of text reached
+      // Just update the characters, don't finish the test automatically
       setCharacters(updatedCharacters);
-      finishTest();
       return;
-    }
-
-    // Check if current character is space and we just completed the last word
-    if (e.key === ' ' || e.key === 'Enter') {
-      // Find remaining text to check if this is the last word
-      const remainingText = characters.slice(currentIndex + 1).map(c => c.char).join('').trim();
-      if (remainingText === '' || remainingText.length === 0) {
-        // This was the last word, finish the test
-        setCharacters(updatedCharacters);
-        finishTest();
-        return;
-      }
     }
     
     // Move to next character
@@ -256,6 +244,7 @@ export const useTypingTest = () => {
     handleKeyDown,
     getTypingStats,
     handlePageChange,
-    handleDifficultyChange
+    handleDifficultyChange,
+    finishTest
   };
 };

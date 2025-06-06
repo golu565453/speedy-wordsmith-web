@@ -20,7 +20,8 @@ const TypingTest: React.FC = () => {
     handleKeyDown,
     getTypingStats,
     handlePageChange,
-    handleDifficultyChange
+    handleDifficultyChange,
+    finishTest
   } = useTypingTest();
 
   const [showCurrentStats, setShowCurrentStats] = useState(false);
@@ -44,6 +45,7 @@ const TypingTest: React.FC = () => {
       const stats = getTypingStats();
       setCurrentStats(stats);
       setShowCurrentStats(true);
+      finishTest(); // Finish the test when user clicks the button
     }
   };
 
